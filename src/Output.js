@@ -11,6 +11,7 @@ function Output() {
   const [image, setImage] = useState("");
   const [workExperience, setWorkExperience] = useState([]);
   useEffect(() => {
+    console.log(id);
     axios({
       method: "GET",
       url: `http://localhost:5000/profile/get/${id}`,

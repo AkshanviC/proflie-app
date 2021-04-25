@@ -28,26 +28,7 @@ function Edit() {
           name: name,
           age: age,
           image: image,
-          key: workExperience.key,
-          workExperience: workExperience,
-        },
-        withCredentials: true,
-      })
-        .then((res) => res.data)
-        .then((res) => {
-          console.log(res);
-          history.push(`/output/${res._id}`);
-        })
-        .catch((err) => console.log(err));
-    } else {
-      axios({
-        method: "POST",
-        url: "http://localhost:5000/profile/post",
-        data: {
-          name: name,
-          age: age,
-          image: image,
-          key: workExperience.key,
+          id: id,
           workExperience: workExperience,
         },
         withCredentials: true,
@@ -58,18 +39,40 @@ function Edit() {
           history.push(`/output/${res.id}`);
         })
         .catch((err) => console.log(err));
+    } else {
+      console.log("else");
+      axios({
+        method: "POST",
+        url: "http://localhost:5000/profile/post",
+        data: {
+          name: name,
+          age: age,
+          image: image,
+          key: id,
+          workExperience: workExperience,
+        },
+        withCredentials: true,
+      })
+        .then((res) => res.data)
+        .then((res) => {
+          console.log("else", res);
+          history.push(`/output/${res.id}`);
+        })
+        .catch((err) => console.log(err));
     }
   };
 
   useEffect(() => {
     if (id) {
+      console.log("edit mode");
       axios({
         method: "GET",
-        url: "http://localhost:5000/profile/get",
+        url: `http://localhost:5000/profile/get/${id}`,
         withCredentials: true,
       })
         .then((res) => res.data)
         .then((res) => {
+          console.log(res);
           setName(res.name);
           setAge(res.age);
           setImage(res.image);
@@ -106,12 +109,22 @@ function Edit() {
         <input type="file" onChange={handleImage}></input>
       )}
       <p>enter your age</p>
-      <inuput
-        type="number"
-        placeholder="age"
-        style={{ display: "inlineBlock" }}
-        onChange={(e) => setAge(e.target.value)}
-      ></inuput>
+      {age ? (
+        <input
+          type="number"
+          min="1"
+          max="100"
+          value={age}
+          onChange={(e) => setAge(e.target.value)}
+        ></input>
+      ) : (
+        <input
+          type="number"
+          min="1"
+          max="100"
+          onChange={(e) => setAge(e.target.value)}
+        ></input>
+      )}
 
       <p>work experience</p>
       {workExperience

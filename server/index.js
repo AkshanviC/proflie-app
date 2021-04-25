@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const port = process.env.POST || 5000;
-const profileRoute = require("./routes/profile");
+const dataRoute = require("./routes/data");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 app.use(bodyParser.json({ limit: "50mb" }));
@@ -19,6 +19,6 @@ mongoose
   )
   .then(() => console.log("connected to db"))
   .catch((err) => console.log(err));
-app.use("/profile", profileRoute);
+app.use("/profile", dataRoute);
 app.use("/", (req, res) => res.send("we are on home"));
 app.listen(5000, console.log(`server running on port ${port}`));

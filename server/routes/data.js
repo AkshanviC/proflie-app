@@ -3,13 +3,24 @@ const router = express.Router();
 const Profile = require("../models/profile");
 
 router.post("/post", async (req, res) => {
-  if (req.body.key) {
+  if (req.body.id) {
     try {
-      const value = await Profile.findOneAndUpdate({
-        key: req.body.key,
-      });
-      res.json(value);
+      console.log(req.body.id);
+      const value = await Profile.findOneAndUpdate(
+        {
+          _id: req.body.id,
+        },
+        {
+          name: req.body.name,
+          age: req.body.age,
+          image: req.body.image,
+          workExperience: req.body.workExperience,
+        }
+      );
+      console.log("post triggered");
+      res.json({ id: value._id });
     } catch (err) {
+      console.log("no");
       res.json({ msg: err });
     }
   } else {
@@ -20,6 +31,7 @@ router.post("/post", async (req, res) => {
         image: req.body.image,
         workExperience: req.body.workExperience,
       });
+      console.log("post else");
       res.json({ id: value._id });
     } catch (err) {
       console.log("triggered");
@@ -31,8 +43,9 @@ router.post("/post", async (req, res) => {
 router.get("/get/:id", async (req, res) => {
   try {
     const value = await Profile.findOne({
-      key: req.body.key,
+      _id: req.params.id,
     });
+    //console.log(value, req.params.id, "get request");
     res.json(value);
   } catch (err) {
     res.json({ msg: err });
