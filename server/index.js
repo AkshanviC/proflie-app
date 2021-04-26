@@ -10,7 +10,7 @@ app.use(bodyParser.json({ limit: "50mb" }));
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 mongoose
   .connect(
-    `mongodb+srv://iamakshan:thisisakshan@cluster0.r5l7k.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`,
+    `mongodb+srv://brintha:stella56$@cluster0.ruicr.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`,
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
