@@ -11,6 +11,7 @@ function Edit() {
   const [workExperience, setWorkExperience] = useState([]);
   const { id } = useParams();
   const history = useHistory();
+  const [alertmsg, setAlertMsg] = useState("");
 
   const handleImage = async (e) => {
     e.persist();
@@ -20,51 +21,52 @@ function Edit() {
   };
 
   const handleSave = (e) => {
-    if (id) {
-      axios({
-        method: "POST",
-        url: "http://localhost:5000/profile/post",
-        data: {
-          name: name,
-          age: age,
-          image: image,
-          id: id,
-          workExperience: workExperience,
-        },
-        withCredentials: true,
-      })
-        .then((res) => res.data)
-        .then((res) => {
-          console.log(res);
-          history.push(`/output/${res.id}`);
+    setAlertMsg("");
+    if (name && age) {
+      if (id) {
+        axios({
+          method: "POST",
+          url: "http://localhost:5000/profile/post",
+          data: {
+            name: name,
+            age: age,
+            image: image,
+            id: id,
+            workExperience: workExperience,
+          },
+          withCredentials: true,
         })
-        .catch((err) => console.log(err));
+          .then((res) => res.data)
+          .then((res) => {
+            history.push(`/output/${res.id}`);
+          })
+          .catch((err) => console.log(err));
+      } else {
+        axios({
+          method: "POST",
+          url: "http://localhost:5000/profile/post",
+          data: {
+            name: name,
+            age: age,
+            image: image,
+            key: id,
+            workExperience: workExperience,
+          },
+          withCredentials: true,
+        })
+          .then((res) => res.data)
+          .then((res) => {
+            history.push(`/output/${res.id}`);
+          })
+          .catch((err) => console.log(err));
+      }
     } else {
-      console.log("else");
-      axios({
-        method: "POST",
-        url: "http://localhost:5000/profile/post",
-        data: {
-          name: name,
-          age: age,
-          image: image,
-          key: id,
-          workExperience: workExperience,
-        },
-        withCredentials: true,
-      })
-        .then((res) => res.data)
-        .then((res) => {
-          console.log("else", res);
-          history.push(`/output/${res.id}`);
-        })
-        .catch((err) => console.log(err));
+      setAlertMsg("Please enter All the necessary fileds");
     }
   };
 
   useEffect(() => {
     if (id) {
-      console.log("edit mode");
       axios({
         method: "GET",
         url: `http://localhost:5000/profile/get/${id}`,
@@ -72,7 +74,6 @@ function Edit() {
       })
         .then((res) => res.data)
         .then((res) => {
-          console.log(res);
           setName(res.name);
           setAge(res.age);
           setImage(res.image);
@@ -84,6 +85,11 @@ function Edit() {
   return (
     <div style={{ height: "100%" }}>
       <p>Enter Your name</p>
+      {alertmsg && !name ? (
+        <p style={{ color: "red" }}>Please enter Your name</p>
+      ) : (
+        ""
+      )}
       <input
         type="text"
         placeholder="enter your name"
@@ -109,22 +115,18 @@ function Edit() {
         <input type="file" onChange={handleImage}></input>
       )}
       <p>enter your age</p>
-      {age ? (
-        <input
-          type="number"
-          min="1"
-          max="100"
-          value={age}
-          onChange={(e) => setAge(e.target.value)}
-        ></input>
+      {alertmsg && !age ? (
+        <p style={{ color: "red" }}>Please enter Your Age</p>
       ) : (
-        <input
-          type="number"
-          min="1"
-          max="100"
-          onChange={(e) => setAge(e.target.value)}
-        ></input>
+        ""
       )}
+      <input
+        type="number"
+        min="1"
+        max="100"
+        value={age}
+        onChange={(e) => setAge(e.target.value)}
+      ></input>
 
       <p>work experience</p>
       {workExperience
@@ -132,6 +134,7 @@ function Edit() {
             <Type
               node={node}
               update={updateMaster(index, workExperience, setWorkExperience)}
+              alertmsg={alertmsg}
             />
           ))
         : ""}
@@ -148,6 +151,7 @@ function Edit() {
               title: "",
               company: "",
               description: "",
+              logo: "",
             },
           ]);
         }}
@@ -156,7 +160,6 @@ function Edit() {
       </button>
 
       <button onClick={handleSave}>Save</button>
-      {console.log(workExperience)}
     </div>
   );
 }

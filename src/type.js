@@ -4,7 +4,11 @@ import { convertBase64 } from "./utilities/index";
 function Type(props) {
   return (
     <div>
-      {console.log("triggered")}
+      {!props.node.start && props.alertmsg ? (
+        <p>plesae enter start-date</p>
+      ) : (
+        ""
+      )}
       <p>Start Day:</p>
       <input
         type="date"
@@ -14,6 +18,7 @@ function Type(props) {
         }}
         value={props.node.start}
       ></input>
+      {!props.node.end && props.alertmsg ? <p>plesae enter end-date</p> : ""}
       <p>End Day:</p>
       <input
         type="date"
@@ -24,6 +29,7 @@ function Type(props) {
         value={props.node.end}
       ></input>
       <p>Title:</p>
+      {!props.node.title && props.alertmsg ? <p>plesae enter Title</p> : ""}
       <input
         type="text"
         required="required"
@@ -36,6 +42,7 @@ function Type(props) {
         value={props.node.title}
       ></input>
       <p>Company:</p>
+      {!props.node.company && props.alertmsg ? <p>plesae enter company</p> : ""}
       <input
         type="text"
         required="required"
