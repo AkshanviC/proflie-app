@@ -4,6 +4,7 @@ import axios from "axios";
 import { convertBase64, updateMaster } from "./utilities/index";
 import { useHistory, useParams } from "react-router-dom";
 
+
 function Edit() {
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
